@@ -1,4 +1,5 @@
 import cloneStore from "./cloneStore";
+import Cache from "./Cache";
 
 export default class DGraphStore {
     options = {};
@@ -12,7 +13,8 @@ export default class DGraphStore {
     __NodeParentMap = Object.create(null);
     // Object<String, String>
     __NodeChildMap = Object.create(null);
-    // _cache = new Cache();
+    //缓存计算结果
+    _cache = new Cache();
     /**
      *Creates an instance of DGraphStore.
      * @param {Object} data
@@ -25,6 +27,7 @@ export default class DGraphStore {
         this.options = {
             processNode: null,
             processEdge: null,
+            cache: true,
             ...options
         };
 
@@ -120,6 +123,10 @@ export default class DGraphStore {
     getOutDegree(id) {
         const ret = this.getChildren(id);
         return ret.length;
+    }
+
+    clearCache() {
+        this._cache.clear();
     }
 
     /**
@@ -237,6 +244,12 @@ export default class DGraphStore {
      * @memberof DGraphStore
      */
     isDAG() {
+        const { cache } = this.options;
+
+        if (cache && this._cache.has("isDAG")) {
+            return this._cache.get("isDAG");
+        }
+
         const NodeParentMap = this.__NodeParentMap;
         //复制依赖关系数据
         const NodeDeps = Object.create(null);
@@ -265,17 +278,27 @@ export default class DGraphStore {
         };
 
         let noDepsNodes;
+        let result = true;
 
         while ((noDepsNodes = getNoDepsNodes())) {
             const keys = Object.keys(NodeDeps);
             if (!noDepsNodes.length && keys.length) {
-                return false;
+                result = false;
+                break;
             }
 
             if (!keys.length) break;
         }
 
-        return true;
+        if (cache) {
+            this._cache.set("isDAG", result);
+        }
+
+        return result;
+    }
+
+    _getFindCycleKey(id) {
+        return `findCycle_${id}`;
     }
 
     /**
@@ -286,6 +309,12 @@ export default class DGraphStore {
      * @memberof DGraphStore
      */
     _findCycle(id) {
+        const { cache } = this.options;
+        const C_KEY = this._getFindCycleKey(id);
+        if (cache && this._cache.has(C_KEY)) {
+            return this._cache.get(C_KEY);
+        }
+
         const cyclePaths = [];
         //访问路径
         const stack = [];
@@ -317,6 +346,10 @@ export default class DGraphStore {
         };
 
         dfs(id);
+
+        if (cache) {
+            this._cache.set(C_KEY, cyclePaths);
+        }
 
         return cyclePaths;
     }
@@ -354,7 +387,6 @@ export default class DGraphStore {
     }
 
     findAllCycle() {
-        const { idField } = this.options;
         const NodeList = this.__NodeList;
 
         return this.findCycle(NodeList.map(node => node.id));
@@ -382,6 +414,8 @@ export default class DGraphStore {
         this._initData({
             edges: Array.isArray(edge) ? edge : [edge]
         });
+
+        this.clearCache();
     }
 
     removeNode(id) {
@@ -400,6 +434,8 @@ export default class DGraphStore {
             }
         }
         if (idx === -1) return;
+
+        this.clearCache();
 
         NodeList.splice(idx, 1);
         delete NodeMap[id];
@@ -428,6 +464,8 @@ export default class DGraphStore {
         const EdgeList = this.__EdgeList;
         const NodeParentMap = this.__NodeParentMap;
         const NodeChildMap = this.__NodeChildMap;
+
+        this.clearCache();
 
         this.__EdgeList = EdgeList.filter(edge => {
             if (edge.sourceId === sourceId && edge.targetId === targetId) {
@@ -471,6 +509,7 @@ export default class DGraphStore {
         this.__NodeMap = Object.create(null);
         this.__NodeParentMap = Object.create(null);
         this.__NodeChildMap = Object.create(null);
+        this.clearCache();
     }
 
     clone() {

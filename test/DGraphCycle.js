@@ -156,3 +156,22 @@ assert.deepEqual(
     ["2", "3", "4", "5", "6", "7", "8"],
     'graph.getAllParents("0")'
 );
+
+//useCache测试
+const RUN_LIMIT = 20;
+
+console.time("useCache");
+for (let i = 0; i < RUN_LIMIT; i++) {
+    graph.findAllCycle();
+    graph.isDAG();
+}
+console.timeEnd("useCache");
+
+console.time("noCache");
+graph.options.cache = false;
+for (let i = 0; i < RUN_LIMIT; i++) {
+    graph.findAllCycle();
+    graph.isDAG();
+}
+console.timeEnd("noCache");
+graph.options.cache = true;

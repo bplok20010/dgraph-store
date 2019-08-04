@@ -25,7 +25,7 @@ const store = new DGraphStore(data);
 
 ```
 
-## DGraphStore.Node
+## Node
 
 ```
 type Node = {
@@ -33,7 +33,7 @@ type Node = {
 }
 ```
 
-## DGraphStore.Edge
+## Edge
 
 ```
 type Edge = {
@@ -46,12 +46,23 @@ type Edge = {
 
 ## options
 
+默认值：
+
 ```
 {
      processNode: node => node,
      processEdge: node => node,
+     //缓存部分api计算结果
+     cache: true
 }
 ```
+
+可被缓存的 api 列表:
+
+-   isDAG
+-   findCycle
+-   findAllCycle
+-   hasCycle
 
 ## API
 

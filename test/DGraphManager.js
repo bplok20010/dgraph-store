@@ -154,6 +154,21 @@ assert.deepEqual(
 );
 
 assert.deepEqual(
+    graph.findCycle("7"),
+    [
+        ["0", "5", "4", "2"],
+        ["2", "3"],
+        ["5", "4", "2", "3"],
+        ["0", "5", "4", "3", "2"],
+        ["5", "4", "3"],
+        ["9", "10", "12"],
+        ["9", "11", "12"],
+        ["7", "8"]
+    ],
+    'graph.findCycle("7") test tache'
+);
+
+assert.deepEqual(
     graph.getChildren("0").map(r => r.id),
     ["1", "5"],
     'graph.getChildren("0")'
