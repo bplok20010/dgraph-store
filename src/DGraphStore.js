@@ -123,36 +123,39 @@ export default class DGraphStore {
     }
 
     /**
-     * 获取指定顶点的子节点列表，如果有回路会排除自身节点
+     * 获取指定顶点的子节点列表
      *
      * @param {*} id
      * @returns
      * @memberof DGraphStore
      */
     getChildren(id) {
-        const NodeChildMap = this.__NodeChildMap;
         const NodeMap = this.__NodeMap;
-        const child = NodeChildMap[id] || [];
 
-        return child
-            .map(cid => (cid === id ? null : NodeMap[cid]))
-            .filter(v => v);
+        return this.getChildrenIds(id).map(id => NodeMap[id]);
     }
 
     getChildrenIds(id) {
-        return this.getChildren(id).map(node => node.id);
+        const NodeChildMap = this.__NodeChildMap;
+        const child = NodeChildMap[id] || [];
+
+        return [].concat(child);
     }
 
     getAllChildren(id) {
         const NodeMap = this.__NodeMap;
+
+        return this.getAllChildrenIds(id).map(id => NodeMap[id]);
+    }
+
+    getAllChildrenIds(id) {
         const hasWalk = Object.create(null);
         const results = [];
         const walkNodes = vid => {
             hasWalk[vid] = true;
-            results.push(NodeMap[vid]);
-            const child = this.getChildren(vid);
-            child.forEach(node => {
-                const cid = node.id;
+            results.push(vid);
+            const child = this.getChildrenIds(vid);
+            child.forEach(cid => {
                 if (hasWalk[cid]) return;
                 walkNodes(cid);
             });
@@ -164,41 +167,40 @@ export default class DGraphStore {
 
         return results;
     }
-
-    getAllChildrenIds(id) {
-        return this.getAllChildren(id).map(node => node.id);
-    }
     /**
-     * 获取指定顶点的父节点列表，如果有回路会排除自身节点
+     * 获取指定顶点的父节点列表
      *
      * @param {*} id
      * @returns
      * @memberof DGraphStore
      */
     getParents(id) {
-        const NodeParentMap = this.__NodeParentMap;
         const NodeMap = this.__NodeMap;
-        const child = NodeParentMap[id] || [];
+        const child = this.getParentIds(id);
 
-        return child
-            .map(cid => (cid === id ? null : NodeMap[cid]))
-            .filter(v => v);
+        return child.map(cid => NodeMap[cid]);
     }
 
     getParentIds(id) {
-        return this.getParents(id).map(node => node.id);
+        const NodeParentMap = this.__NodeParentMap;
+        const child = NodeParentMap[id] || [];
+
+        return [].concat(child);
     }
 
     getAllParents(id) {
         const NodeMap = this.__NodeMap;
+        return this.getAllParentIds(id).map(id => NodeMap[id]);
+    }
+
+    getAllParentIds(id) {
         const hasWalk = Object.create(null);
         const results = [];
         const walkNodes = vid => {
             hasWalk[vid] = true;
-            results.push(NodeMap[vid]);
-            const child = this.getParents(vid);
-            child.forEach(node => {
-                const cid = node.id;
+            results.push(vid);
+            const child = this.getParentIds(vid);
+            child.forEach(cid => {
                 if (hasWalk[cid]) return;
                 walkNodes(cid);
             });
@@ -211,8 +213,20 @@ export default class DGraphStore {
         return results;
     }
 
-    getAllParentIds(id) {
-        return this.getAllParents(id).map(node => node.id);
+    getDependentNodes(id) {
+        return this.getParents(id);
+    }
+
+    getDependentIds(id) {
+        return this.getParentIds(id);
+    }
+
+    getAllDependentNodes(id) {
+        return this.getAllParents(id);
+    }
+
+    getAllDependentIds(id) {
+        return this.getAllParentIds(id);
     }
 
     /**

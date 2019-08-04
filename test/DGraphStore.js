@@ -69,16 +69,28 @@ const graph = new DGraphStore(dataset);
 
 // test getChildren
 assert.deepEqual(
+    graph.getChildren("12").map(r => r.id),
+    ["12"],
+    'graph.getChildren("12")'
+);
+assert.deepEqual(
+    graph.getParents("12").map(r => r.id),
+    ["11", "12"],
+    'graph.getParents("12")'
+);
+
+// test getChildren
+assert.deepEqual(
     graph.getChildren("6").map(r => r.id),
     ["4", "9"],
-    'graph1.getChildren("6")'
+    'graph.getChildren("6")'
 );
 
 let ret1 = graph.getAllChildren("6");
 assert.deepEqual(
     ret1.map(r => r.id),
     ["4", "9", "10", "11", "12"],
-    'graph1.getAllChildren("6")'
+    'graph.getAllChildren("6")'
 );
 
 ret1 = graph.getAllChildren("0");
@@ -96,9 +108,21 @@ assert.deepEqual(
 );
 
 assert.deepEqual(
+    graph.getDependentNodes("4").map(r => r.id),
+    ["5", "6"],
+    'graph1.getDependentNodes("4")'
+);
+
+assert.deepEqual(
     graph.getAllParents("4").map(r => r.id),
     ["5", "0", "2", "3", "6", "7", "8"],
     'graph1.getAllParents("4")'
+);
+
+assert.deepEqual(
+    graph.getAllDependentNodes("4").map(r => r.id),
+    ["5", "0", "2", "3", "6", "7", "8"],
+    'graph1.getAllDependentNodes("4")'
 );
 
 assert.deepEqual(

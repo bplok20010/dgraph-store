@@ -85,13 +85,21 @@ type Edge = {
 
 `getParents(id)` 获取指定节点的所依赖的节点（父节点） 返回：`Array<Node>`
 
+`getDependentNodes(id)` 作用同`getParents`
+
 `getParentIds(id)` 作用参考`getParents` 返回：`Array<String>`
+
+`getDependentIds(id)` 作用同`getParentIds`
 
 `getAllParents(id)` 获取指定节点的所有依赖的节点（父节点） 返回：`Array<Node>`
 
 > 深度遍历获取所有“父节点”
 
+`getAllDependentNodes(id)` 作用同`getAllParents`
+
 `getAllParentIds(id)` 作用参考`getAllParents` 返回：`Array<String>`
+
+`getAllDependentIds(id)` 作用同`getAllParentIds`
 
 `getInDegree(id)` 获取指定节点的入度数（父节点数）返回：`Number`
 
