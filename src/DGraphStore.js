@@ -23,9 +23,6 @@ export default class DGraphStore {
      */
     constructor(data, options = {}) {
         this.options = {
-            idField: "id",
-            sourceIdField: "sourceId",
-            targetIdField: "targetId",
             processNode: null,
             processEdge: null,
             ...options
@@ -37,13 +34,7 @@ export default class DGraphStore {
     }
 
     _initData(data) {
-        const {
-            idField,
-            sourceIdField,
-            targetIdField,
-            processNode,
-            processEdge
-        } = this.options;
+        const { processNode, processEdge } = this.options;
         const nodes = data.nodes || [];
         const edges = data.edges || [];
 
@@ -51,7 +42,7 @@ export default class DGraphStore {
             nodes.forEach(node => {
                 node = processNode ? processNode(node) : node;
                 this.__NodeList.push(node);
-                this.__NodeMap[node[idField]] = node;
+                this.__NodeMap[node.id] = node;
             });
         }
 
@@ -59,8 +50,8 @@ export default class DGraphStore {
             edges.forEach(edge => {
                 edge = processEdge ? processEdge(edge) : edge;
 
-                const sourceId = edge[sourceIdField];
-                const targetId = edge[targetIdField];
+                const sourceId = edge.sourceId;
+                const targetId = edge.targetId;
 
                 this.__NodeParentMap[sourceId] =
                     this.__NodeParentMap[sourceId] || [];
@@ -149,12 +140,10 @@ export default class DGraphStore {
     }
 
     getChildrenIds(id) {
-        const { idField } = this.options;
-        return this.getChildren(id).map(node => node[idField]);
+        return this.getChildren(id).map(node => node.id);
     }
 
     getAllChildren(id) {
-        const { idField } = this.options;
         const NodeMap = this.__NodeMap;
         const hasWalk = Object.create(null);
         const results = [];
@@ -163,7 +152,7 @@ export default class DGraphStore {
             results.push(NodeMap[vid]);
             const child = this.getChildren(vid);
             child.forEach(node => {
-                const cid = node[idField];
+                const cid = node.id;
                 if (hasWalk[cid]) return;
                 walkNodes(cid);
             });
@@ -177,8 +166,7 @@ export default class DGraphStore {
     }
 
     getAllChildrenIds(id) {
-        const { idField } = this.options;
-        return this.getAllChildren(id).map(node => node[idField]);
+        return this.getAllChildren(id).map(node => node.id);
     }
     /**
      * 获取指定顶点的父节点列表，如果有回路会排除自身节点
@@ -198,12 +186,10 @@ export default class DGraphStore {
     }
 
     getParentIds(id) {
-        const { idField } = this.options;
-        return this.getParents(id).map(node => node[idField]);
+        return this.getParents(id).map(node => node.id);
     }
 
     getAllParents(id) {
-        const { idField } = this.options;
         const NodeMap = this.__NodeMap;
         const hasWalk = Object.create(null);
         const results = [];
@@ -212,7 +198,7 @@ export default class DGraphStore {
             results.push(NodeMap[vid]);
             const child = this.getParents(vid);
             child.forEach(node => {
-                const cid = node[idField];
+                const cid = node.id;
                 if (hasWalk[cid]) return;
                 walkNodes(cid);
             });
@@ -226,8 +212,7 @@ export default class DGraphStore {
     }
 
     getAllParentIds(id) {
-        const { idField } = this.options;
-        return this.getAllParents(id).map(node => node[idField]);
+        return this.getAllParents(id).map(node => node.id);
     }
 
     /**
@@ -287,7 +272,6 @@ export default class DGraphStore {
      * @memberof DGraphStore
      */
     _findCycle(id) {
-        const { idField } = this.options;
         const cyclePaths = [];
         //访问路径
         const stack = [];
@@ -311,7 +295,7 @@ export default class DGraphStore {
             stackMarked[id] = true;
 
             const child = this.getChildren(id);
-            child.forEach(node => dfs(node[idField]));
+            child.forEach(node => dfs(node.id));
 
             stack.pop();
             stackMarked[id] = false;
@@ -359,7 +343,7 @@ export default class DGraphStore {
         const { idField } = this.options;
         const NodeList = this.__NodeList;
 
-        return this.findCycle(NodeList.map(node => node[idField]));
+        return this.findCycle(NodeList.map(node => node.id));
     }
 
     /**
@@ -387,7 +371,6 @@ export default class DGraphStore {
     }
 
     removeNode(id) {
-        const { idField, sourceIdField, targetIdField } = this.options;
         const NodeList = this.__NodeList;
         const EdgeList = this.__EdgeList;
         const NodeMap = this.__NodeMap;
@@ -397,7 +380,7 @@ export default class DGraphStore {
         let idx = -1;
         for (let i = 0; i < NodeList.length; i++) {
             const node = NodeList[i];
-            if (node[idField] === id) {
+            if (node.id === id) {
                 idx = i;
                 break;
             }
@@ -411,7 +394,7 @@ export default class DGraphStore {
         delete NodeParentMap[id];
         delete NodeChildMap[id];
         this.__EdgeList = EdgeList.filter(edge => {
-            if (edge[sourceIdField] === id || edge[targetIdField] === id) {
+            if (edge.sourceId === id || edge.targetId === id) {
                 return false;
             }
             return true;
@@ -428,16 +411,12 @@ export default class DGraphStore {
     }
 
     removeEdge(sourceId, targetId) {
-        const { sourceIdField, targetIdField } = this.options;
         const EdgeList = this.__EdgeList;
         const NodeParentMap = this.__NodeParentMap;
         const NodeChildMap = this.__NodeChildMap;
 
         this.__EdgeList = EdgeList.filter(edge => {
-            if (
-                edge[sourceIdField] === sourceId &&
-                edge[targetIdField] === targetId
-            ) {
+            if (edge.sourceId === sourceId && edge.targetId === targetId) {
                 return false;
             }
             return true;
@@ -451,15 +430,11 @@ export default class DGraphStore {
     }
 
     hasEdge(sourceId, targetId) {
-        const { sourceIdField, targetIdField } = this.options;
         const EdgeList = this.__EdgeList;
 
         for (let i = 0; i < EdgeList.length; i++) {
             const edge = EdgeList[i];
-            if (
-                edge[sourceIdField] === sourceId &&
-                edge[targetIdField] === targetId
-            ) {
+            if (edge.sourceId === sourceId && edge.targetId === targetId) {
                 return true;
             }
         }

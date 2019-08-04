@@ -25,15 +25,29 @@ const store = new DGraphStore(data);
 
 ```
 
+## DGraphStore.Node
+
+```
+type Node = {
+    id: String | Number
+}
+```
+
+## DGraphStore.Edge
+
+```
+type Edge = {
+    sourceId: String | Number,
+    targetId: String | Number
+}
+```
+
 ## DGraphStore
 
 ## options
 
 ```
 {
-     idField: 'id',
-     sourceIdField: 'sourceId',
-     targetIdField: 'targetId',
      processNode: node => node,
      processEdge: node => node,
 }
@@ -111,8 +125,8 @@ const store = new DGraphStore(data);
 
 ```
 {
-    nodes: [...],
-    edges: [...]
+    nodes: Array<Node>,
+    edges: Array<Edge>
 }
 ```
 
