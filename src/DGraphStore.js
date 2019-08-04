@@ -96,7 +96,7 @@ export default class DGraphStore {
     getNode(id) {
         const NodeMap = this.__NodeMap;
 
-        return NodeMap[id] || null;
+        return NodeMap[id];
     }
 
     //当前节点的出度是否为0

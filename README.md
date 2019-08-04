@@ -65,6 +65,8 @@ type Edge = {
 
 `getNodeList()` 获取所有节点 `Array<Node>`
 
+`getEdgeList()` 获取所有节点连线列表 `Array<Edge>`
+
 `getNodeMap()` 获取节点 Map<key,Node>对象
 
 `hasNode(id)` 当前节点是否存在
