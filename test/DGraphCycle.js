@@ -1,4 +1,4 @@
-const DGraphStore = require("../index");
+const { default: DGraphStore } = require("../lib/index");
 const assert = require("assert");
 const dataset = {
     nodes: [
@@ -109,6 +109,35 @@ assert.deepEqual(
         ["7", "8"]
     ],
     'graph.findCycle("7")'
+);
+
+assert.deepEqual(
+    graph.findCycle(["9", "3"]),
+    [
+        ["9", "10", "12"],
+        ["9", "11", "12"],
+        ["2", "0", "5", "4"],
+        ["3", "2", "0", "5", "4"],
+        ["3", "2"],
+        ["3", "5", "4", "2"],
+        ["3", "5", "4"]
+    ],
+    'graph.findCycle(["9", "3"])'
+);
+
+assert.deepEqual(
+    graph.findAllCycle(),
+    [
+        ["0", "5", "4", "2"],
+        ["2", "3"],
+        ["5", "4", "2", "3"],
+        ["0", "5", "4", "3", "2"],
+        ["5", "4", "3"],
+        ["9", "10", "12"],
+        ["9", "11", "12"],
+        ["7", "8"]
+    ],
+    "graph.findAllCycle()"
 );
 
 assert.deepEqual(

@@ -4,7 +4,7 @@
     "description": "有向图数据模型",
     "main": "lib/index.js",
     "scripts": {
-        "start": "transform-es src -d lib -c -w",
+        "start": "transform-es src -d lib -c -w --corejs false",
         "test": "node test/index"
     },
     "repository": {

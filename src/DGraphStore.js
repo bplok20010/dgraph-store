@@ -12,7 +12,6 @@ export default class DGraphStore {
     __NodeParentMap = Object.create(null);
     // Object<String, String>
     __NodeChildMap = Object.create(null);
-    __init = true;
     // _cache = new Cache();
     /**
      *Creates an instance of DGraphStore.
@@ -35,8 +34,6 @@ export default class DGraphStore {
         if (data) {
             this._initData(data);
         }
-
-        this.__init = false;
     }
 
     _initData(data) {
@@ -289,7 +286,7 @@ export default class DGraphStore {
      * @returns {Array<Array<String>>}
      * @memberof DGraphStore
      */
-    findCycle(id) {
+    _findCycle(id) {
         const { idField } = this.options;
         const cyclePaths = [];
         //访问路径
@@ -323,13 +320,19 @@ export default class DGraphStore {
 
         dfs(id);
 
-        //去重
+        return cyclePaths;
+    }
+
+    //闭环去重
+    _uniqCyclePath(cyclePaths) {
         const cyclePathsMap = Object.create(null);
+        const sep = "/";
+
         return cyclePaths.filter(path => {
             let t = [].concat(path);
             t.sort();
 
-            const p = t.join("/");
+            const p = t.join(sep);
 
             if (cyclePathsMap[p]) {
                 return false;
@@ -341,6 +344,24 @@ export default class DGraphStore {
         });
     }
 
+    findCycle(id) {
+        const ids = Array.isArray(id) ? id : [id];
+        let cyclePaths = [];
+
+        for (let i = 0; i < ids.length; i++) {
+            cyclePaths = cyclePaths.concat(this._findCycle(ids[i]));
+        }
+
+        return this._uniqCyclePath(cyclePaths);
+    }
+
+    findAllCycle() {
+        const { idField } = this.options;
+        const NodeList = this.__NodeList;
+
+        return this.findCycle(NodeList.map(node => node[idField]));
+    }
+
     /**
      * 判断指定顶点下是否出现环路
      *
@@ -349,7 +370,7 @@ export default class DGraphStore {
      * @memberof DGraphStore
      */
     hasCycle(id) {
-        const ret = this.findCycle(id);
+        const ret = this._findCycle(id);
         return !!ret.length;
     }
 

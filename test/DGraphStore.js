@@ -1,5 +1,6 @@
-const DGraphStore = require("../index");
 const assert = require("assert");
+const { default: DGraphStore } = require("../lib/index");
+
 const dataset = {
     nodes: [
         {
