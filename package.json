@@ -1,20 +1,38 @@
 {
-  "name": "dgraph-store",
-  "version": "0.0.1",
-  "description": "有向图数据模型",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/bplok20010/dgraph-store.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/bplok20010/dgraph-store/issues"
-  },
-  "homepage": "https://github.com/bplok20010/dgraph-store#readme"
+    "name": "dgraph-store",
+    "version": "0.0.1",
+    "description": "有向图数据模型",
+    "main": "lib/index.js",
+    "scripts": {
+        "start": "transform-es src -d lib -c -w",
+        "test": "node test/index"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/bplok20010/dgraph-store.git"
+    },
+    "keywords": [
+        "graph",
+        "digraph",
+        "dgraph-store",
+        "store"
+    ],
+    "author": "nobo.zhou@foxmail.com",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/bplok20010/dgraph-store/issues"
+    },
+    "homepage": "https://github.com/bplok20010/dgraph-store#readme",
+    "devDependencies": {
+        "@babel/plugin-transform-modules-amd": "^7.5.0",
+        "@babel/plugin-transform-modules-commonjs": "^7.5.0",
+        "@babel/plugin-transform-modules-systemjs": "^7.5.0",
+        "@babel/plugin-transform-modules-umd": "^7.2.0",
+        "transform-es": "^2.3.0"
+    },
+    "dependencies": {
+        "@babel/runtime": "^7.5.5",
+        "@babel/runtime-corejs2": "^7.5.5",
+        "lodash": "^4.17.15"
+    }
 }
