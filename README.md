@@ -63,6 +63,7 @@ type Edge = {
 -   findCycle
 -   findAllCycle
 -   hasCycle
+-   findAllPath
 
 ## API
 
@@ -123,6 +124,8 @@ type Edge = {
 `findCycle(String | Array)` 获取指定节点的所有环路 返回：`Array<String>`
 
 `findAllCycle()` 获取当前模型下所有环路列表
+
+`findAllPath(from: String, to: String)` 获取指定开始节点到目标节点的所有可达路径 返回: `Array<Array<String>>`
 
 `hasCycle(id)` 判断指定起始顶点下是否存在闭环
 

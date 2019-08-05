@@ -394,18 +394,25 @@ export default class DGraphStore {
     /**
      * 找出开始到结束节点之间的所有可通过路径
      *
-     * @param {String} form 开始节点
+     * @param {String} from 开始节点
      * @param {String} to 结束节点
      * @returns {Array<Array<String>>} 返回节点ID列表
      * @memberof DGraphStore
      */
-    findAllPath(form, to) {
-        if (form == null || to == null) {
+    findAllPath(from, to) {
+        const { cache } = this.options;
+        const C_KEY = `findAllPath(${from}, ${to})`;
+
+        if (from == null || to == null) {
             throw "Parameter error!";
         }
 
-        if (!this.hasNode(form) || !this.hasNode(to)) {
+        if (!this.hasNode(from) || !this.hasNode(to)) {
             return [];
+        }
+
+        if (cache && this._cache.has(C_KEY)) {
+            return this._cache.get(C_KEY);
         }
 
         const paths = [];
@@ -415,13 +422,14 @@ export default class DGraphStore {
         const stackMarked = Object.create(null);
 
         const dfs = id => {
-            //是否出现环路
-            if (stackMarked[id]) {
+            // 检测自身依赖 case: A -> A
+            if (stack.length && id === to) {
+                paths.push([].concat(stack, to));
                 return;
             }
 
-            if (id === to) {
-                paths.push([].concat(stack, to));
+            //是否出现环路
+            if (stackMarked[id]) {
                 return;
             }
 
@@ -435,7 +443,11 @@ export default class DGraphStore {
             stackMarked[id] = false;
         };
 
-        dfs(form);
+        dfs(from);
+
+        if (cache) {
+            this._cache.set(C_KEY, paths);
+        }
 
         return paths;
     }

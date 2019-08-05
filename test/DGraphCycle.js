@@ -111,6 +111,16 @@ assert.deepEqual(
     'graph.findCycle("7")'
 );
 
+graph.addEdge({
+    sourceId: "3",
+    targetId: "3"
+});
+
+graph.addEdge({
+    sourceId: "5",
+    targetId: "5"
+});
+
 assert.deepEqual(
     graph.findCycle(["9", "3"]),
     [
@@ -118,12 +128,17 @@ assert.deepEqual(
         ["9", "11", "12"],
         ["2", "0", "5", "4"],
         ["3", "2", "0", "5", "4"],
+        ["5"],
         ["3", "2"],
         ["3", "5", "4", "2"],
-        ["3", "5", "4"]
+        ["3", "5", "4"],
+        ["3"]
     ],
-    'graph.findCycle(["9", "3"])'
+    "graph.findCycle(['9', '3'])"
 );
+
+graph.removeEdge("3", "3");
+graph.removeEdge("5", "5");
 
 assert.deepEqual(
     graph.findAllCycle(),
@@ -157,6 +172,25 @@ assert.deepEqual(
     'graph.getAllParents("0")'
 );
 
+graph.addEdge({
+    sourceId: "3",
+    targetId: "3"
+});
+
+assert.deepEqual(
+    graph.findAllPath("3", "3"),
+    [
+        ["3", "2", "0", "5", "4", "3"],
+        ["3", "2", "3"],
+        ["3", "5", "4", "2", "3"],
+        ["3", "5", "4", "3"],
+        ["3", "3"]
+    ],
+    'graph.findAllPath("3", "3")'
+);
+
+graph.removeEdge("3", "3");
+
 assert.deepEqual(
     graph.findAllPath("6", "2"),
     [
@@ -175,6 +209,7 @@ console.time("useCache");
 for (let i = 0; i < RUN_LIMIT; i++) {
     graph.findAllCycle();
     graph.isDAG();
+    graph.findAllPath("6", "2");
 }
 console.timeEnd("useCache");
 
@@ -183,6 +218,7 @@ graph.options.cache = false;
 for (let i = 0; i < RUN_LIMIT; i++) {
     graph.findAllCycle();
     graph.isDAG();
+    graph.findAllPath("6", "2");
 }
 console.timeEnd("noCache");
 graph.options.cache = true;
