@@ -330,7 +330,10 @@ export default class DGraphStore {
             if (stackMarked[id]) {
                 const idx = stack.indexOf(id);
                 const path = stack.slice(idx);
-                // path.push(id);
+                //关于 A->B B->A
+                //如果不执行下面这行,则只会记录一条闭环: A,B
+                //否则两条: A,B,A  B,A,B
+                path.push(id);
                 cyclePaths.push(path);
                 return;
             }
