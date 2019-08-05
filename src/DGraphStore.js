@@ -391,6 +391,54 @@ export default class DGraphStore {
 
         return this.findCycle(NodeList.map(node => node.id));
     }
+    /**
+     * 找出开始到结束节点之间的所有可通过路径
+     *
+     * @param {String} form 开始节点
+     * @param {String} to 结束节点
+     * @returns {Array<Array<String>>} 返回节点ID列表
+     * @memberof DGraphStore
+     */
+    findAllPath(form, to) {
+        if (form == null || to == null) {
+            throw "Parameter error!";
+        }
+
+        if (!this.hasNode(form) || !this.hasNode(to)) {
+            return [];
+        }
+
+        const paths = [];
+        //访问路径
+        const stack = [];
+        //访问路径标记，回路检测直接查找当前map而不查stack
+        const stackMarked = Object.create(null);
+
+        const dfs = id => {
+            //是否出现环路
+            if (stackMarked[id]) {
+                return;
+            }
+
+            if (id === to) {
+                paths.push([].concat(stack, to));
+                return;
+            }
+
+            stack.push(id);
+            stackMarked[id] = true;
+
+            const child = this.getChildren(id);
+            child.forEach(node => dfs(node.id));
+
+            stack.pop();
+            stackMarked[id] = false;
+        };
+
+        dfs(form);
+
+        return paths;
+    }
 
     /**
      * 判断指定顶点下是否出现环路

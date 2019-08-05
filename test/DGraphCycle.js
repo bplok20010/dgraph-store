@@ -157,6 +157,17 @@ assert.deepEqual(
     'graph.getAllParents("0")'
 );
 
+assert.deepEqual(
+    graph.findAllPath("6", "2"),
+    [
+        ["6", "0", "5", "4", "2"],
+        ["6", "0", "5", "4", "3", "2"],
+        ["6", "4", "2"],
+        ["6", "4", "3", "2"]
+    ],
+    'graph.findAllPath("6", "2")'
+);
+
 //useCache测试
 const RUN_LIMIT = 20;
 
