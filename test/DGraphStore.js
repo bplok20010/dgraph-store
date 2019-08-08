@@ -94,41 +94,42 @@ assert.deepEqual(
 );
 
 ret1 = graph.getAllChildren("0");
+
 assert.deepEqual(
     ret1.map(r => r.id),
     ["1", "5", "4", "6", "9", "10", "11", "12"],
-    'graph1.getAllChildren("0")'
+    'graph.getAllChildren("0")'
 );
 
 // test getParents
 assert.deepEqual(
     graph.getParents("4").map(r => r.id),
     ["5", "6"],
-    'graph1.getParents("4")'
+    'graph.getParents("4")'
 );
 
 assert.deepEqual(
     graph.getDependentNodes("4").map(r => r.id),
     ["5", "6"],
-    'graph1.getDependentNodes("4")'
+    'graph.getDependentNodes("4")'
 );
 
 assert.deepEqual(
     graph.getAllParents("4").map(r => r.id),
     ["5", "0", "2", "3", "6", "7", "8"],
-    'graph1.getAllParents("4")'
+    'graph.getAllParents("4")'
 );
 
 assert.deepEqual(
     graph.getAllDependentNodes("4").map(r => r.id),
     ["5", "0", "2", "3", "6", "7", "8"],
-    'graph1.getAllDependentNodes("4")'
+    'graph.getAllDependentNodes("4")'
 );
 
 assert.deepEqual(
     graph.getAllParents("9").map(r => r.id),
     ["6", "0", "2", "7", "8"],
-    'graph1.getAllParents("9")'
+    'graph.getAllParents("9")'
 );
 // 检测闭环
 assert.ok(!graph.isDAG(), "!graph.isDAG()");
@@ -146,18 +147,38 @@ const graph1 = new DGraphStore({
 
 // 检测闭环
 assert.ok(!graph1.isDAG(), "!graph1.isDAG()");
+
 assert.deepEqual(
     graph1.getChildren("0").map(r => r.id),
     ["1", "5", "6"],
     'graph1.getChildren("0")'
 );
+
 assert.deepEqual(
     graph1.getAllChildren("0").map(r => r.id),
-    ["1", "5", "4", "6", "9", "10", "11", "12", "2", "3"],
+    ["1", "5", "4", "6", "9", "10", "11", "12", "2", "0", "3"],
     'graph1.getAllChildren("0")'
 );
+
 assert.deepEqual(
     graph1.getAllParents("0").map(r => r.id),
-    ["2", "9", "6", "7", "8"],
+    ["2", "9", "6", "0", "7", "8"],
     'graph1.getAllParents("0")'
+);
+
+graph1.addEdge({
+    sourceId: "9",
+    targetId: "9"
+});
+
+assert.deepEqual(
+    graph1.getAllChildrenIds("9"),
+    ["10", "11", "12", "2", "0", "1", "5", "4", "6", "9", "3"],
+    'graph1.getAllChildrenIds("9")'
+);
+
+assert.deepEqual(
+    graph1.getAllParentIds("9"),
+    ["6", "0", "2", "9", "7", "8"],
+    'graph1.getAllParentIds("9")'
 );

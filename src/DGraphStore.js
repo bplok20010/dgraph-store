@@ -159,11 +159,11 @@ export default class DGraphStore {
         const hasWalk = Object.create(null);
         const results = [];
         const walkNodes = vid => {
-            hasWalk[vid] = true;
             results.push(vid);
             const child = this.getChildrenIds(vid);
             child.forEach(cid => {
                 if (hasWalk[cid]) return;
+                hasWalk[cid] = true;
                 walkNodes(cid);
             });
         };
@@ -204,11 +204,11 @@ export default class DGraphStore {
         const hasWalk = Object.create(null);
         const results = [];
         const walkNodes = vid => {
-            hasWalk[vid] = true;
             results.push(vid);
             const child = this.getParentIds(vid);
             child.forEach(cid => {
                 if (hasWalk[cid]) return;
+                hasWalk[cid] = true;
                 walkNodes(cid);
             });
         };

@@ -186,15 +186,16 @@ assert.deepEqual(
     ["1", "5"],
     'graph.getChildren("0")'
 );
+
 assert.deepEqual(
     graph.getAllChildren("0").map(r => r.id),
-    ["1", "5", "4", "2", "3"],
+    ["1", "5", "4", "2", "0", "3"],
     'graph.getAllChildren("0")'
 );
 
 assert.deepEqual(
     graph.getAllParents("0").map(r => r.id),
-    ["2", "3", "4", "5", "6", "7", "8"],
+    ["2", "3", "4", "5", "0", "6", "7", "8"],
     'graph.getAllParents("0")'
 );
 
