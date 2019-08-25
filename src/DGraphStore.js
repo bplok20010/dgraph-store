@@ -7,11 +7,11 @@ export default class DGraphStore {
     __NodeList = [];
     // Array<Edge>
     __EdgeList = [];
-    // Object<String, String>
+    // Object<String, Node>
     __NodeMap = Object.create(null);
-    // Object<String, String>
+    // Object<String, Array<String>>
     __NodeParentMap = Object.create(null);
-    // Object<String, String>
+    // Object<String, Array<String>>
     __NodeChildMap = Object.create(null);
     //缓存计算结果
     _cache = new Cache();
