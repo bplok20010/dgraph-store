@@ -1,10 +1,13 @@
 {
     "name": "dgraph-store",
-    "version": "0.4.1",
+    "version": "0.5.0",
     "description": "有向图数据模型",
     "main": "lib/index.js",
+    "module": "esm/index.js",
     "scripts": {
-        "start": "transform-es src -d lib -c -w --corejs false",
+        "start": "transform-es src -d lib -c -w",
+        "esm": "transform-es src -d esm -t esm  -c",
+        "cjs": "transform-es src -d lib -c",
         "test": "node test/index"
     },
     "repository": {
@@ -19,6 +22,7 @@
     ],
     "files": [
         "lib",
+        "esm",
         "*.js",
         "*.md"
     ],
@@ -29,14 +33,18 @@
     },
     "homepage": "https://github.com/bplok20010/dgraph-store#readme",
     "devDependencies": {
-        "@babel/plugin-transform-modules-amd": "^7.5.0",
-        "@babel/plugin-transform-modules-commonjs": "^7.5.0",
-        "@babel/plugin-transform-modules-systemjs": "^7.5.0",
-        "@babel/plugin-transform-modules-umd": "^7.2.0",
-        "transform-es": "^2.3.0"
+        "transform-es": "^3.3.0"
     },
     "dependencies": {
-        "@babel/runtime": "^7.5.5",
-        "@babel/runtime-corejs2": "^7.5.5"
-    }
+        "@babel/runtime": "^7.6.3"
+    },
+    "browserslist": [
+        ">= .25%",
+        "not dead",
+        "not op_mini all",
+        "not Android 4.4.3-4.4.4",
+        "not ios_saf < 10",
+        "not Chrome < 50",
+        "firefox ESR"
+    ]
 }
