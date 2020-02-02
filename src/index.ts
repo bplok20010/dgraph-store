@@ -606,6 +606,10 @@ export class DGraphStore {
 		const data = this.toData();
 		const options = this.options;
 
-		return new DGraphStore(data, { ...options });
+		const store = new DGraphStore(data);
+
+		store.options = { ...options };
+
+		return store;
 	}
 }
