@@ -1,0 +1,7 @@
+>=0.25%
+not dead
+not op_mini all
+not Android 4.4.3-4.4.4
+not ios_saf < 10
+not Chrome < 50
+firefox ESR

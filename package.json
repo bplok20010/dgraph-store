@@ -1,50 +1,49 @@
 {
-    "name": "dgraph-store",
-    "version": "0.5.0",
-    "description": "有向图数据模型",
-    "main": "lib/index.js",
-    "module": "esm/index.js",
-    "scripts": {
-        "start": "transform-es src -d lib -c -w",
-        "esm": "transform-es src -d esm -t esm  -c",
-        "cjs": "transform-es src -d lib -c",
-        "test": "node test/index"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/bplok20010/dgraph-store.git"
-    },
-    "keywords": [
-        "graph",
-        "digraph",
-        "dgraph-store",
-        "store"
-    ],
-    "files": [
-        "lib",
-        "esm",
-        "*.js",
-        "*.md"
-    ],
-    "author": "nobo.zhou@foxmail.com",
-    "license": "MIT",
-    "bugs": {
-        "url": "https://github.com/bplok20010/dgraph-store/issues"
-    },
-    "homepage": "https://github.com/bplok20010/dgraph-store#readme",
-    "devDependencies": {
-        "transform-es": "^3.3.0"
-    },
-    "dependencies": {
-        "@babel/runtime": "^7.6.3"
-    },
-    "browserslist": [
-        ">= .25%",
-        "not dead",
-        "not op_mini all",
-        "not Android 4.4.3-4.4.4",
-        "not ios_saf < 10",
-        "not Chrome < 50",
-        "firefox ESR"
-    ]
+	"name": "dgraph-store",
+	"version": "1.0.0",
+	"description": "有向图数据模型",
+	"main": "./dist/cjs/index.js",
+	"module": "./dist/esm/index.js",
+	"types": "./lib/index.d.ts",
+	"scripts": {
+		"start": "tsc -w",
+		"clear": "rimraf lib dist",
+		"build": "run-s clear build:*",
+		"build:lib": "tsc",
+		"build:cjs": "babel lib --config-file=./babel.config.js  --out-dir dist/cjs",
+		"build:esm": "babel lib --config-file=./babel.config.esm.js  --out-dir dist/esm",
+		"test": "node test/index"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/bplok20010/dgraph-store.git"
+	},
+	"keywords": [
+		"model",
+		"graph",
+		"digraph",
+		"dgraph-store",
+		"store"
+	],
+	"files": [
+		"dist",
+		"lib",
+		"*.md"
+	],
+	"author": "nobo.zhou@foxmail.com",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/bplok20010/dgraph-store/issues"
+	},
+	"homepage": "https://github.com/bplok20010/dgraph-store#readme",
+	"devDependencies": {
+		"@babel/cli": "^7.8.4",
+		"babel-preset-packez": "^1.0.0",
+		"npm-run-all": "^4.1.5",
+		"rimraf": "^3.0.1",
+		"typescript": "^3.7.5"
+	},
+	"dependencies": {
+		"@babel/runtime": "^7.8.4"
+	}
 }

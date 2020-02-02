@@ -6,10 +6,10 @@
 
 `npm install --save dgraph-store`
 
-`import DGraphStore, { createStore, cloneStore } from 'dgraph-store'`
+`import { createStore, DGraphStore } from 'dgraph-store'`
 
 ```
-import DGraphStore, { createStore, cloneStore } from 'dgraph-store'
+import  { createStore, DGraphStore } from 'dgraph-store'
 const data = {
     nodes: [{
         id: 'A'
@@ -50,8 +50,8 @@ type Edge = {
 
 ```
 {
-     processNode: node => node,
-     processEdge: node => node,
+     nodeProcessor: node => node,
+     edgeProcessor: edge => edge,
      //缓存部分api计算结果
      cache: true
 }
@@ -161,7 +161,3 @@ type Edge = {
 ## createStore(data, options)
 
 作用同`new DGraphStore(...)`
-
-## cloneStore(store)
-
-复制数据模型并返回新实例
