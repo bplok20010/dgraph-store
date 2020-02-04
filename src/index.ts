@@ -613,3 +613,5 @@ export class DGraphStore {
 		return store;
 	}
 }
+
+export default DGraphStore;

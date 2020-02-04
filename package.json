@@ -1,6 +1,6 @@
 {
 	"name": "dgraph-store",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"description": "有向图数据模型",
 	"main": "./dist/cjs/index.js",
 	"module": "./dist/esm/index.js",
