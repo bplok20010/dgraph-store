@@ -1,46 +1,46 @@
 import Cache from "./Cache";
 
-type IdType = string | number;
+export type IdType = any;
 
-export type GraphData = {
+export interface GraphData<Node extends NodeType, Edge extends EdgeType> extends Record<any, any> {
 	nodes?: Node[];
 	edges?: Edge[];
-	[x: string]: any;
-};
-
-export interface Node {
-	id: IdType;
-	[x: string]: any;
 }
 
-export interface Edge {
+export interface NodeType {
+	id: IdType;
+}
+
+export interface EdgeType {
 	sourceId: IdType;
 	targetId: IdType;
-	[x: string]: any;
 }
 
-export interface DGraphStoreOptions {
+export interface DGraphStoreOptions<Node extends NodeType, Edge extends EdgeType> {
 	nodeProcessor?: ((node: Node) => Node) | null;
 	edgeProcessor?: ((edge: Edge) => Edge) | null;
 	cache?: boolean;
 }
 
-export function createStore(data: GraphData, options?: DGraphStoreOptions) {
+export function createStore<Node extends NodeType, Edge extends EdgeType>(
+	data: GraphData<Node, Edge>,
+	options?: DGraphStoreOptions<Node, Edge>
+) {
 	return new DGraphStore(data, options);
 }
 
-export class DGraphStore {
-	protected options: DGraphStoreOptions;
+export class DGraphStore<Node extends NodeType, Edge extends EdgeType> {
+	protected options: DGraphStoreOptions<Node, Edge>;
 	// Array<Node>
 	protected __NodeList: Node[] = [];
 	// Array<Edge>
 	protected __EdgeList: Edge[] = [];
 	// Object<String, Node>
-	protected __NodeMap: { [x: string]: Node } = Object.create(null);
+	protected __NodeMap: Record<IdType, Node> = Object.create(null);
 	// Object<String, Array<String>>
-	protected __NodeParentMap: { [x: string]: IdType[] } = Object.create(null);
+	protected __NodeParentMap: Record<IdType, IdType[]> = Object.create(null);
 	// Object<String, Array<String>>
-	protected __NodeChildMap: { [x: string]: IdType[] } = Object.create(null);
+	protected __NodeChildMap: Record<IdType, IdType[]> = Object.create(null);
 	//缓存计算结果
 	protected _cache = new Cache();
 	/**
@@ -51,7 +51,7 @@ export class DGraphStore {
 	 * @param {Object} options
 	 * @memberof DGraphStore
 	 */
-	constructor(data: GraphData, options?: DGraphStoreOptions) {
+	constructor(data: GraphData<Node, Edge>, options?: DGraphStoreOptions<Node, Edge>) {
 		this.options = {
 			nodeProcessor: null,
 			edgeProcessor: null,
@@ -64,7 +64,7 @@ export class DGraphStore {
 		}
 	}
 
-	protected _initData(data: GraphData) {
+	protected _initData(data: GraphData<Node, Edge>) {
 		const { nodeProcessor, edgeProcessor } = this.options;
 		const nodes = data.nodes || [];
 		const edges = data.edges || [];
